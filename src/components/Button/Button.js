@@ -1,9 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Button = (props) => {
+  console.log(props);
   return (
-    <StyledButton color={props.color}>
+    <StyledButton {...props}>
       {props.children}
     </StyledButton>
   );
@@ -16,13 +17,13 @@ const StyledButton = styled.button`
   min-height: 32px;
   border-radius: 5px;
   outline: none;
-  color: #fff;
   border: none;
   cursor: pointer;
   transition: background 0.8s;
   background-position: center;
-  ${props => props.color && css`
-      background: ${props.color};
+  ${props => css`
+      background: ${props.bgColor || 'white'};
+      color: ${props.color || 'black'};
   `};
 
   &:hover {

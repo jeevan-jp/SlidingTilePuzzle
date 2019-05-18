@@ -1,24 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = (props) => {
-  return (
-    <StyledButton>
-      {props.children}
-    </StyledButton>
-  )
-}
+import Button from '../Button';
 
 const ButtonBoard = (props) => {
-  let count = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+  let count = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15, ''];
   return (
     <Container>
       <ButtonContainer>
         {
           count.map(num => (
-            <Button key={'button' + num}>
+            num === '' ? (
+            <Button bgColor={"green"} key={'button' + num}>
               {num}
             </Button>
+            ) : (
+              <Button key={'button' + num}>
+                {num}
+              </Button>  
+            )
           ))
         }
       </ButtonContainer>
@@ -46,10 +46,4 @@ const ButtonContainer = styled.div`
   grid-template-rows: auto auto auto auto; 
   grid-column-gap: 5px;
   grid-row-gap: 5px;
-`;
-
-const StyledButton = styled.button`
-  displau: flex;
-  flex: 1;
-  height: 100%;
 `;
