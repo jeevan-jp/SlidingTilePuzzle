@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Button from '../Button';
-// import { sayHi } from '../../utils/misc';
+import { swapValues, checkWin } from '../../utils/misc';
 
 class ButtonBoard extends React.Component {
   state = {
@@ -15,36 +15,43 @@ class ButtonBoard extends React.Component {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-  componentDidUpdate() {
-    const { row,column } = this.state;
-    console.log(row, column);
-  }
-
   handleLeft = () => {
-    const { column } = this.state;
+    const { row, column, board } = this.state;
     if(column > 1) {
-      this.setState({ column: column - 1 });
+      this.setState({
+        column: column - 1,
+        board: swapValues(board, [row-1, column-1, row-1, column-2])
+      });
     }
   }
 
   handleTop = () => {
-    const { row } = this.state;
+    const { row, column, board } = this.state;    
     if(row > 1) {
-      this.setState({ row: row - 1 });
+      this.setState({
+        row: row - 1,
+        board: swapValues(board, [row-1, column-1, row-2, column-1])
+      });
     }
   }
 
   handleRight = () => {
-    const { column } = this.state;
+    const { row, column, board } = this.state;    
     if(column < 4) {
-      this.setState({ column: column + 1 });
+      this.setState({
+        column: column + 1,
+        board: swapValues(board, [row-1, column-1, row-1, column])
+      });
     }
   }
 
   handleDown = () => {
-    const { row } = this.state;
+    const { row, column, board } = this.state;    
     if(row < 4) {
-      this.setState({ row: row + 1 });
+      this.setState({
+        row: row + 1,
+        board: swapValues(board, [row-1, column-1, row, column-1])
+      });
     }
   }
 
@@ -66,17 +73,18 @@ class ButtonBoard extends React.Component {
       default:
         break;
     }
+    checkWin(this.state.board);
   }
 
   renderButtons = () => {
     const { board } = this.state;
     return board.flat().map(num => (
       num === '' ? (
-      <Button bgColor={"green"} key={'button' + num}>
+      <Button bgColor={"green"} key={'button' + Math.random()*10005}>
         {num}
       </Button>
       ) : (
-        <Button key={'button' + num}>
+        <Button key={'button' + Math.random()*10001}>
           {num}
         </Button>
       )
