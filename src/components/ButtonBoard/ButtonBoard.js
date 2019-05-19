@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Button from '../Button';
@@ -42,7 +42,7 @@ class ButtonBoard extends React.Component {
   }
 
   handleDown = () => {
-    const { row, column } = this.state;
+    const { row } = this.state;
     if(row < 4) {
       this.setState({ row: row + 1 });
     }
