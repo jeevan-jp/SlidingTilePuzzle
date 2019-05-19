@@ -7,15 +7,18 @@ import Button from '../Button';
 import { swapValues, checkWin } from '../../utils/misc';
 import { addMove } from '../../actions/addMove';
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addMove: data => dispatch(addMove(data))
-  }
-}
+const mapStateToProps = state => ({
+  moves: state.moves,
+});
+
+const mapDispatchToProps = dispatch => ({
+    addMove: (coords, board) => dispatch(addMove(coords, board))
+});
 
 class ButtonBoard extends React.Component {
   static propTypes = {
     addMove: PropTypes.func.isRequired,
+    moves: PropTypes.array.isRequired,
   }
 
   state = {
@@ -25,6 +28,8 @@ class ButtonBoard extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.moves);
+    // this.setState({ board: this.props.moves.slice(-1).board });
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -32,7 +37,7 @@ class ButtonBoard extends React.Component {
     const { row, column, board } = this.state;
     if(column > 1) {
       const moveCoords = [row-1, column-1, row-1, column-2];
-      this.props.addMove(moveCoords);
+      this.props.addMove(moveCoords, board);
       this.setState({
         column: column - 1,
         board: swapValues(board, moveCoords)
@@ -44,7 +49,7 @@ class ButtonBoard extends React.Component {
     const { row, column, board } = this.state;  
     if(row > 1) {
       const moveCoords = [row-1, column-1, row-2, column-1];
-      this.props.addMove(moveCoords);
+      this.props.addMove(moveCoords, board);
       this.setState({
         row: row - 1,
         board: swapValues(board, moveCoords)
@@ -56,7 +61,7 @@ class ButtonBoard extends React.Component {
     const { row, column, board } = this.state;
     if(column < 4) {
       const moveCoords = [row-1, column-1, row-1, column];
-      this.props.addMove(moveCoords);
+      this.props.addMove(moveCoords, board);
       this.setState({
         column: column + 1,
         board: swapValues(board, moveCoords)
@@ -68,7 +73,7 @@ class ButtonBoard extends React.Component {
     const { row, column, board } = this.state;
     if(row < 4) {
       const moveCoords = [row-1, column-1, row, column-1];
-      this.props.addMove(moveCoords);
+      this.props.addMove(moveCoords, board);
       this.setState({
         row: row + 1,
         board: swapValues(board, moveCoords)
@@ -98,7 +103,13 @@ class ButtonBoard extends React.Component {
   }
 
   renderButtons = () => {
-    const { board } = this.state;
+    let { board } = this.state;
+    const { moves } = this.props;
+    console.log(moves);
+    if(moves.length) {
+      board = moves[moves.length - 1].board;
+    }
+  
     return board.flat().map(num => (
       num === '' ? (
       <Button bgColor={"green"} key={'button' + Math.random()*10005}>
@@ -123,7 +134,7 @@ class ButtonBoard extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ButtonBoard);
+export default connect(mapStateToProps, mapDispatchToProps)(ButtonBoard);
 
 const Container =  styled.div`
   display: flex;

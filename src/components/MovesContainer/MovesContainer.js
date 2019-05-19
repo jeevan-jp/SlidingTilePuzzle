@@ -21,9 +21,9 @@ class MovesContainer extends React.Component {
     }
   
     const { moves } = this.props;
-    return moves.map(m => (
+    return moves.map(({coords}) => (
       <StyledSteps key={'moveTaken' + Math.random()*10001}>
-        You moved from ({m[0]+1}, {m[1]+1}) to ({m[2]+1}, {m[3]+1})
+        You moved from ({coords[0]+1}, {coords[1]+1}) to ({coords[2]+1}, {coords[3]+1})
       </StyledSteps>
     ));
   }
