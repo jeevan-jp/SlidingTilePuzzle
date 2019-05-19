@@ -1,8 +1,10 @@
 const timerReducer = (state = 0, action) => {
-  if(action.type === 'INCREMENT') {
-    return state + 1;
+  switch(action.type) {
+    case 'INCREMENT':
+      return state + 1;
+    default:
+      return state;
   }
-  return state;
 }
 
 export default timerReducer;

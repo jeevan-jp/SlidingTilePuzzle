@@ -5,7 +5,7 @@ import timerReducer from './timer'
 
 const rootReducer = combineReducers({
     moves: movesReducer,
-    time: timerReducer
+    timer: timerReducer
 });
 
 export default rootReducer;

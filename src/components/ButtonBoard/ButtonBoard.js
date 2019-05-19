@@ -7,10 +7,6 @@ import Button from '../Button';
 import { swapValues, checkWin } from '../../utils/misc';
 import { addMove } from '../../actions/addMove';
 
-const mapStateToProps = state => {
-  return { moves: state.moves };
-}
-
 const mapDispatchToProps = dispatch => {
   return {
     addMove: data => dispatch(addMove(data))
@@ -20,7 +16,6 @@ const mapDispatchToProps = dispatch => {
 class ButtonBoard extends React.Component {
   static propTypes = {
     addMove: PropTypes.func.isRequired,
-    moves: PropTypes.array.isRequired,
   }
 
   state = {
@@ -128,7 +123,7 @@ class ButtonBoard extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ButtonBoard);
+export default connect(null, mapDispatchToProps)(ButtonBoard);
 
 const Container =  styled.div`
   display: flex;
