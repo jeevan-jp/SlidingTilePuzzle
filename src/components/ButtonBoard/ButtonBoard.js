@@ -1,29 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Button from '../Button';
+// import { sayHi } from '../../utils/misc';
 
 const ButtonBoard = (props) => {
-  let count = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15, ''];
+  const [row, setCurrentRow] = useState(4);
+  const [column, setCurrentColumn] = useState(4);
+  const [board, setBoard] = useState([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15, '']]);
+  
+  useEffect(() => {  
+    const handleLeft = () => {
+      if(column > 1) {
+        setCurrentColumn(column - 1);
+        console.log(row, column);
+      }
+    }
+
+    const handleTop = () => {
+      if(row > 1) {
+        setCurrentRow(row - 1);
+        console.log(row, column);
+      }
+    }
+
+    const handleRight = () => {
+      if(column < 4) {
+        setCurrentColumn(column + 1);
+        console.log(row, column);
+      }
+    }
+
+    const handleDown = () => {
+      if(row < 4) {
+        setCurrentRow(row + 1);
+        console.log(row, column);
+      }
+    }
+
+    const handleKeyDown = (e) => {
+      const { keyCode } = e;
+      switch(keyCode) {
+        case 37:
+          handleLeft();
+          break;
+        case 38:
+          handleTop();
+          break;
+        case 39:
+          handleRight();
+          break;
+        case 40:
+          handleDown();
+          break;
+        default:
+          break;
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+  }, [row, column]);
+
+  const renderButtons = () => {
+    return board.flat().map(num => (
+      num === '' ? (
+      <Button bgColor={"green"} key={'button' + num}>
+        {num}
+      </Button>
+      ) : (
+        <Button key={'button' + num}>
+          {num}
+        </Button>
+      )
+    ));
+  }
+
   return (
     <Container>
       <ButtonContainer>
-        {
-          count.map(num => (
-            num === '' ? (
-            <Button bgColor={"green"} key={'button' + num}>
-              {num}
-            </Button>
-            ) : (
-              <Button key={'button' + num}>
-                {num}
-              </Button>  
-            )
-          ))
-        }
+        {renderButtons()}
       </ButtonContainer>
     </Container>
-  )
+  );
 }
 
 export default ButtonBoard;
