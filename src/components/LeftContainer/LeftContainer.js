@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Timer from '../Timer';
 import Button from '../Button';
 
-const LeftContainer = (props) => {
-  const [moves, setMoves] = useState(0);
+const mapStateToProps = store => ({
+    moves: store.moves,
+});
+
+const LeftContainer = ({moves}) => {
   return (
     <StyledContainer>
       <div>Time: <Timer start={0} /></div>
       <br />
-      <div>Moves: {moves}</div>
+      <div>Moves: {moves.length}</div>
       <br />
       <ButtonContainer>
         <Button bgColor={"#F79331"} color={"white"}>New Game</Button>
@@ -21,7 +26,11 @@ const LeftContainer = (props) => {
   );
 }
 
-export default LeftContainer;
+export default connect(mapStateToProps)(LeftContainer);
+
+LeftContainer.propTypes = {
+  moves: PropTypes.array.isRequired,
+};
 
 const StyledContainer = styled.div`
   padding: 0.8rem;

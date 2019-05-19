@@ -35,7 +35,6 @@ class ButtonBoard extends React.Component {
 
   handleLeft = () => {
     const { row, column, board } = this.state;
-    console.log(this.props.moves);
     if(column > 1) {
       const moveCoords = [row-1, column-1, row-1, column-2];
       this.props.addMove(moveCoords);
@@ -48,7 +47,6 @@ class ButtonBoard extends React.Component {
 
   handleTop = () => {
     const { row, column, board } = this.state;  
-    console.log(this.props.moves);
     if(row > 1) {
       const moveCoords = [row-1, column-1, row-2, column-1];
       this.props.addMove(moveCoords);
@@ -61,7 +59,6 @@ class ButtonBoard extends React.Component {
 
   handleRight = () => {
     const { row, column, board } = this.state;
-    console.log(this.props.moves);
     if(column < 4) {
       const moveCoords = [row-1, column-1, row-1, column];
       this.props.addMove(moveCoords);
@@ -74,7 +71,6 @@ class ButtonBoard extends React.Component {
 
   handleDown = () => {
     const { row, column, board } = this.state;
-    console.log(this.props.moves);
     if(row < 4) {
       const moveCoords = [row-1, column-1, row, column-1];
       this.props.addMove(moveCoords);

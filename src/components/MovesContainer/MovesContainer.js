@@ -1,18 +1,46 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const MovesContainer = (props) => {
-  return (
-    <TextBox>
-      <Header>Your Moves</Header>
-      <Text>
-        display: flex;
-      </Text>
-    </TextBox>
-  )
+const mapStateToProps = store => ({
+  moves: store.moves,  
+});
+
+class MovesContainer extends React.Component {
+  static propTypes = {
+    moves: PropTypes.array.isRequired,
+  };
+
+  containerRef = React.createRef();
+
+  renderMoves = () => {
+    const ref = this.containerRef.current;
+    if(ref) {
+      ref.scrollTo(0, ref.scrollHeight);
+    }
+  
+    const { moves } = this.props;
+    return moves.map(m => (
+      <StyledSteps key={'moveTaken' + Math.random()*10001}>
+        You moved from ({m[0]+1}, {m[1]+1}) to ({m[2]+1}, {m[3]+1})
+      </StyledSteps>
+    ));
+  }
+
+  render() {
+    return (
+      <TextBox ref={this.containerRef}>
+        <Header>Your Moves</Header>
+        <Text>
+          {this.renderMoves()}
+        </Text>
+      </TextBox>
+    );
+  }
 }
 
-export default MovesContainer;
+export default connect(mapStateToProps)(MovesContainer);
 
 const TextBox = styled.div`
   display: flex;
@@ -34,7 +62,9 @@ const Header = styled.div`
 `;
 
 const Text = styled.div`
-  display: flex;
-  align-items: center;
   margin: 0 8px;
+`;
+
+const StyledSteps = styled.div`
+  margin-bottom: 1rem;
 `;
