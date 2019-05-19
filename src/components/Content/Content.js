@@ -26,7 +26,7 @@ export default Content;
 const ContentContainer = styled.div`
   display: flex;
   flex: 1;
-  height: 95vh;
+  height: 92vh;
   background-color: #00e7ff;
 `;
 

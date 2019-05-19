@@ -1,10 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Button from '../Button';
 import { swapValues, checkWin } from '../../utils/misc';
+import { addMove } from '../../actions/addMove';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addMove: data => dispatch(addMove(data))
+  }
+}
 
 class ButtonBoard extends React.Component {
+  static propTypes = {
+    addMove: PropTypes.func.isRequired,
+  }
+
   state = {
     row: 4,
     column: 4,
@@ -36,11 +49,13 @@ class ButtonBoard extends React.Component {
   }
 
   handleRight = () => {
-    const { row, column, board } = this.state;    
+    const { row, column, board } = this.state;  
     if(column < 4) {
+      const moveCoords = [row-1, column-1, row-1, column];
+      this.props.addMove(moveCoords);
       this.setState({
         column: column + 1,
-        board: swapValues(board, [row-1, column-1, row-1, column])
+        board: swapValues(board, moveCoords)
       });
     }
   }
@@ -102,7 +117,7 @@ class ButtonBoard extends React.Component {
   }
 }
 
-export default ButtonBoard;
+export default connect(null, mapDispatchToProps)(ButtonBoard);
 
 const Container =  styled.div`
   display: flex;
