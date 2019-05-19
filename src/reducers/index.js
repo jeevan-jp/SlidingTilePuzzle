@@ -4,7 +4,7 @@ import movesReducer from './moves';
 import timerReducer from './timer'
 
 const rootReducer = combineReducers({
-    movesReducer,
+    moves: movesReducer,
     timerReducer
 });
 
