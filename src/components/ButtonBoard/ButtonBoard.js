@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Button from '../Button';
-import { swapValues, checkWin, ShuffleBoard, findEmptyTile } from '../../utils/misc';
+import { swapValues, checkWin, ShuffleBoard, findCoordsOfEmptyTile } from '../../utils/misc';
 import { addMove } from '../../actions/addMove';
 
 const mapStateToProps = state => ({
@@ -40,8 +40,8 @@ class ButtonBoard extends React.Component {
     } else {
       // set up new random board
       const board = ShuffleBoard();
-      const [row, column] = findEmptyTile(board);
-      this.setState({row, column, board});
+      const [row, column] = findCoordsOfEmptyTile(board);
+      console.log(row, column, board);
     }
     window.addEventListener('keydown', this.handleKeyDown);
   }

@@ -29,14 +29,19 @@ const ShuffleBoard = (board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13,
   return board;
 }
 
-const findEmptyTile = (board) => {
+const findCoordsOfEmptyTile = (board) => {
   let row = 0;
-  const column = board.filter((arr, i) => {
-    row = i;
+
+  const array = board.filter((arr, i) => {
+    if(arr.includes("")) {
+      row = i;
+    }
     return  arr.includes("");
-  })[0].indexOf("");
+  });
+  
+  const column = array[0].indexOf("");
 
   return [row, column];
 }
 
-export { swapValues, checkWin, ShuffleBoard, findEmptyTile };
+export { swapValues, checkWin, ShuffleBoard, findCoordsOfEmptyTile };
