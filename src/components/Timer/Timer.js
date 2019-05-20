@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { incrementTimer } from '../../actions/incrementTimer';
+import { incrementTimer } from '../../actions/timerReducer';
 
 const mapStateToProps = state => ({
   timer: state.timer,

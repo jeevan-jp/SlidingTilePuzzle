@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Button from '../Button';
-import { swapValues, checkWin } from '../../utils/misc';
+import { swapValues, checkWin, ShuffleBoard, findEmptyTile } from '../../utils/misc';
 import { addMove } from '../../actions/addMove';
 
 const mapStateToProps = state => ({
@@ -22,21 +22,34 @@ class ButtonBoard extends React.Component {
   }
 
   state = {
-    row: 4,
-    column: 4,
+    row: 3,
+    column: 3,
     board: [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15, '']],
   }
 
   componentDidMount() {
-    console.log(this.props.moves);
-    // this.setState({ board: this.props.moves.slice(-1).board });
+    // setting up row, column (saved config from redux)
+    const { moves } = this.props;
+    if(moves.length) {
+      const { coords, board } = moves[moves.length - 1];
+      this.setState({
+        row: coords[2],
+        column: coords[3],
+        board,
+      });
+    } else {
+      // set up new random board
+      const board = ShuffleBoard();
+      const [row, column] = findEmptyTile(board);
+      this.setState({row, column, board});
+    }
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
   handleLeft = () => {
     const { row, column, board } = this.state;
-    if(column > 1) {
-      const moveCoords = [row-1, column-1, row-1, column-2];
+    if(column > 0) {
+      const moveCoords = [row, column, row, column-1];
       this.props.addMove(moveCoords, board);
       this.setState({
         column: column - 1,
@@ -46,9 +59,9 @@ class ButtonBoard extends React.Component {
   }
 
   handleTop = () => {
-    const { row, column, board } = this.state;  
-    if(row > 1) {
-      const moveCoords = [row-1, column-1, row-2, column-1];
+    const { row, column, board } = this.state;
+    if(row > 0) {
+      const moveCoords = [row, column, row-1, column];
       this.props.addMove(moveCoords, board);
       this.setState({
         row: row - 1,
@@ -59,24 +72,30 @@ class ButtonBoard extends React.Component {
 
   handleRight = () => {
     const { row, column, board } = this.state;
-    if(column < 4) {
-      const moveCoords = [row-1, column-1, row-1, column];
+    if(column < 3) {
+      const moveCoords = [row, column, row, column + 1];
       this.props.addMove(moveCoords, board);
       this.setState({
         column: column + 1,
         board: swapValues(board, moveCoords)
+      }, () => {
+        const { moves } = this.props;
+        checkWin(moves[moves.length - 1].board);
       });
     }
   }
 
   handleDown = () => {
     const { row, column, board } = this.state;
-    if(row < 4) {
-      const moveCoords = [row-1, column-1, row, column-1];
+    if(row < 3) {
+      const moveCoords = [row, column, row + 1, column];
       this.props.addMove(moveCoords, board);
       this.setState({
         row: row + 1,
         board: swapValues(board, moveCoords)
+      }, () => {
+        const { moves } = this.props;
+        checkWin(moves[moves.length - 1].board);
       });
     }
   }
@@ -99,13 +118,11 @@ class ButtonBoard extends React.Component {
       default:
         break;
     }
-    checkWin(this.state.board);
   }
 
   renderButtons = () => {
     let { board } = this.state;
     const { moves } = this.props;
-    console.log(moves);
     if(moves.length) {
       board = moves[moves.length - 1].board;
     }

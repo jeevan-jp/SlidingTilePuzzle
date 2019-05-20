@@ -1,10 +1,12 @@
-const movesReducer = (state = [], action) => {
-  const { coords, board } = action;
+const movesReducer = (moves = [], action) => {
   switch (action.type) {
     case 'ADD_MOVE':
-      return [...state, {coords, board}];
+      const { coords, board } = action;
+      return [...moves, {coords, board}];
+    case 'RESET':
+      return [];
     default:
-      return state;
+      return moves;
   }
 }
 
