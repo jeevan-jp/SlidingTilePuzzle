@@ -17,7 +17,7 @@ const mapDispatcherToProps = dispatch => ({
   ResetTimer: () => dispatch(ResetTimer())
 });
 
-const LeftContainer = ({moves, ResetGame, ResetTimer}) => {
+const LeftContainer = ({ moves, ResetGame, ResetTimer, autoSolve }) => {
   return (
     <StyledContainer>
       <div>Time: <Timer start={0} /></div>
@@ -36,7 +36,13 @@ const LeftContainer = ({moves, ResetGame, ResetTimer}) => {
         >
           New Game
         </Button>
-        <Button bgColor={"#8CC63E"} color={"white"}>Auto Solve</Button>
+        <Button
+          bgColor={"#8CC63E"}
+          color={"white"}
+          onClick={() => {
+            autoSolve();
+          }}
+        >Auto Solve</Button>
         <Button
           bgColor={"#f04d59"}
           color={"white"}

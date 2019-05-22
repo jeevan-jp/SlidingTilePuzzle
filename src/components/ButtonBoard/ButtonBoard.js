@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import LeftContainer from '../LeftContainer';
 import Button from '../Button';
-import { swapValues, checkWin, findCoordsOfEmptyTile, makeShuffleMoves } from '../../utils/misc';
+import { swapValues, checkWin, findCoordsOfEmptyTile } from '../../utils/misc';
 import { addMove, addShuffleMoves } from '../../actions/addMove';
 
 const mapStateToProps = state => ({
@@ -50,11 +51,57 @@ class ButtonBoard extends React.Component {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
+  makeShuffleMoves = (board, row, column) => {
+    while(true) {
+      const move = Math.floor(Math.random() * 4);
+      if(move === 0 && row > 0) {
+        const coords = [row, column, row-1, column];
+        row = row - 1;
+        board = swapValues(board, coords);
+        return { coords, board,  };
+      }
+      else if(move===1 && column < 3) {
+        const coords = [row, column, row, column + 1];
+        column = column + 1;
+        board = swapValues(board, coords);
+        return { coords, board,  };
+      }
+      else if(move === 2 && row < 3) {
+        const coords = [row, column, row+1, column];
+        row = row + 1;
+        board = swapValues(board, coords);
+        return { coords, board,  };
+      }
+      else if(move === 3 && column > 0) {
+        const coords = [row, column, row, column-1];
+        column = column-1;
+        board = swapValues(board, coords);
+        return { coords, board,  };
+      }
+    }
+  }
+
   ShuffleBoard = () => {
-    const shuffleMoves = makeShuffleMoves(); // shuffleMove format: [{ board, coords: [array_of_move] }]
-    this.props.addShuffleMoves(shuffleMoves);
-    console.log(this.props.oldShuffleMoves);
-    return shuffleMoves[shuffleMoves.length - 1].board;
+    let oldBoard = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, '']];
+    let [row, column] = [3,3];
+  
+    const random = Math.random();
+    const MaxCount = Math.floor((random > 0.22 ? random : 0.44)*100);
+    let count = 0;
+
+    while (count < MaxCount) {
+      const shuffleMoves = this.makeShuffleMoves(oldBoard, row, column);
+      const { coords, board } = shuffleMoves;
+      oldBoard = board;
+      row = coords[2];
+      column = coords[3];
+  
+      console.log(shuffleMoves);
+  
+      this.props.addShuffleMoves(shuffleMoves);
+      count++;
+    }
+    return oldBoard;
   }
 
   handleLeft = () => {
@@ -151,9 +198,34 @@ class ButtonBoard extends React.Component {
     ));
   }
 
+  autoSolve = () => {
+    const { oldShuffleMoves, moves } = this.props;
+    const allMoves = [...oldShuffleMoves, ...moves];
+
+    let counter = allMoves.length - 1;
+
+    const x = setInterval(() => {
+      const { board } = allMoves[counter];
+      console.log(board);
+      this.setState({
+        board,
+      }, () => {
+        counter--;
+        if(counter < 0) {
+          clearInterval(x);
+        }
+      });
+    }, 200);
+  }
+
   render() {
     return (
       <Container>
+        <OneThird>
+          <LeftContainer autoSolve={() => {
+            this.autoSolve();
+          }} />
+        </OneThird>
         <ButtonContainer>
           {this.renderButtons()}
         </ButtonContainer>
@@ -172,9 +244,14 @@ const Container =  styled.div`
   margin: 1.5rem;
 `;
 
+const OneThird = styled.div`
+  width: 33%;
+  height: 100%;
+`;
+
 const ButtonContainer = styled.div`
   display: grid;
-  width: 100%;
+  width: 67%;
   height: 100%;
   padding: 6px;
   background: #e6e6e6;
