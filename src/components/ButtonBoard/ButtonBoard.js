@@ -131,6 +131,28 @@ class ButtonBoard extends React.Component {
     }
   }
 
+  autoSolve = () => {
+    const { oldShuffleMoves, moves } = this.props;
+    const allMoves = [...oldShuffleMoves, ...moves];
+
+    let counter = allMoves.length - 1;
+
+    const x = setInterval(() => {
+      const { coords } = allMoves[counter];
+      const [r1, c1, r2, c2] = coords;
+      const { board } = this.state;
+      [board[r1][c1], board[r2][c2]] = [board[r2][c2], board[r1][c1]];
+      this.setState({
+        board,
+      }, () => {
+        counter--;
+        if(counter < 0) {
+          clearInterval(x);
+        }
+      });
+    }, 500);
+  }
+
   renderButtons = () => {
     let { board } = this.state;
     const { moves } = this.props;
@@ -149,25 +171,6 @@ class ButtonBoard extends React.Component {
         </Button>
       )
     ));
-  }
-
-  autoSolve = () => {
-    const { oldShuffleMoves, moves } = this.props;
-    const allMoves = [...oldShuffleMoves, ...moves];
-
-    let counter = allMoves.length - 1;
-
-    const x = setInterval(() => {
-      const { board } = allMoves[counter];
-      this.setState({
-        board,
-      }, () => {
-        counter--;
-        if(counter < 0) {
-          clearInterval(x);
-        }
-      });
-    }, 200);
   }
 
   render() {

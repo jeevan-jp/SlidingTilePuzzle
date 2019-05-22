@@ -31,7 +31,7 @@ const makeShuffleMoves = () => {
   let board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, '']];
 
   const random = Math.random();
-  const MaxCount = Math.floor((random > 0.22 ? random : 0.44)*5);
+  const MaxCount = Math.floor((random > 0.22 ? random : 0.44)*50);
 
   let [row, column, shuffledMoves, count] = [3,3, [], 0];
   Object.freeze(shuffledMoves);
@@ -50,7 +50,6 @@ const makeShuffleMoves = () => {
               board
             }
           ];
-          console.log(board);
           row--;
           count++;
         }
@@ -65,7 +64,6 @@ const makeShuffleMoves = () => {
               board
             }
           ];
-          console.log(board);
           column++;
           count++;
         }
@@ -73,7 +71,6 @@ const makeShuffleMoves = () => {
       case 2:       // move down
         if(row < 3) {
           [board[row][column], board[row+1][column]] = [board[row+1][column], board[row][column]];
-          console.log(board);
           shuffledMoves = [
             ...shuffledMoves,
             {
@@ -95,7 +92,6 @@ const makeShuffleMoves = () => {
               board
             }
           ];
-          console.log(board);
           column--;;
           count++;
         }
