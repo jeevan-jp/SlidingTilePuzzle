@@ -4,21 +4,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Button from '../Button';
-import { swapValues, checkWin, ShuffleBoard, findCoordsOfEmptyTile } from '../../utils/misc';
-import { addMove } from '../../actions/addMove';
+import { swapValues, checkWin, findCoordsOfEmptyTile, makeShuffleMoves } from '../../utils/misc';
+import { addMove, addShuffleMoves } from '../../actions/addMove';
 
 const mapStateToProps = state => ({
   moves: state.moves,
+  oldShuffleMoves: state.oldShuffleMoves,
 });
 
 const mapDispatchToProps = dispatch => ({
-    addMove: (coords, board) => dispatch(addMove(coords, board))
+    addMove: (coords, board) => dispatch(addMove(coords, board)),
+    addShuffleMoves: (shuffleMoves) => dispatch(addShuffleMoves(shuffleMoves))
 });
 
 class ButtonBoard extends React.Component {
   static propTypes = {
     addMove: PropTypes.func.isRequired,
     moves: PropTypes.array.isRequired,
+    addShuffleMoves: PropTypes.func.isRequired,
+    oldShuffleMoves: PropTypes.array.isRequired,
   }
 
   state = {
@@ -39,11 +43,18 @@ class ButtonBoard extends React.Component {
       });
     } else {
       // set up new random board
-      const board = ShuffleBoard();
+      const board = this.ShuffleBoard();
       const [row, column] = findCoordsOfEmptyTile(board);
-      console.log(row, column, board);
+      this.setState({ row, column, board });
     }
     window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  ShuffleBoard = () => {
+    const shuffleMoves = makeShuffleMoves(); // shuffleMove format: [{ board, coords: [array_of_move] }]
+    this.props.addShuffleMoves(shuffleMoves);
+    console.log(this.props.oldShuffleMoves);
+    return shuffleMoves[shuffleMoves.length - 1].board;
   }
 
   handleLeft = () => {
@@ -58,7 +69,7 @@ class ButtonBoard extends React.Component {
     }
   }
 
-  handleTop = () => {
+  handleUp = () => {
     const { row, column, board } = this.state;
     if(row > 0) {
       const moveCoords = [row, column, row-1, column];
@@ -107,7 +118,7 @@ class ButtonBoard extends React.Component {
         this.handleLeft();
         break;
       case 38:
-        this.handleTop();
+        this.handleUp();
         break;
       case 39:
         this.handleRight();

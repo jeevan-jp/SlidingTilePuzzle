@@ -12,23 +12,6 @@ const checkWin = (board) => {
   }
 }
 
-// following function returns only shuffled board not row, column
-const ShuffleBoard = (board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, '']]) => {
-  let count = 0;
-  let row1, col1, row2, col2;
-  while(count < 50) {
-    row1 = Math.floor(Math.random() * 4);
-    col1 = Math.floor(Math.random() * 4);
-    row2 = Math.floor(Math.random() * 4);
-    col2 = Math.floor(Math.random() * 4);
-    if(row1 !== row2 || col1 !== col2) {
-      board = swapValues(board, [row1, col1, row2, col2]);
-      count++;
-    }
-  }
-  return board;
-}
-
 const findCoordsOfEmptyTile = (board) => {
   let row = 0;
 
@@ -44,4 +27,65 @@ const findCoordsOfEmptyTile = (board) => {
   return [row, column];
 }
 
-export { swapValues, checkWin, ShuffleBoard, findCoordsOfEmptyTile };
+const makeShuffleMoves = () => {
+  let board = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, '']];
+
+  const random = Math.random();
+  const MaxCount = Math.floor((random > 0.22 ? random : 0.44)*100);
+  let count = 0;
+
+  const shuffleMoves = [];
+  let [row, column] = [3,3];
+
+  while(count < MaxCount) {
+    const move = Math.floor(Math.random() * 4);
+
+    switch(move) {
+      case 0:       // move up
+        if(row > 0) {
+          const coords = [row, column, row-1, column];
+          row = row-1;
+          board = swapValues(board, coords);
+          shuffleMoves.push({ board, coords });
+          count++;
+        }
+        break;
+      
+      case 1:       // move right
+        if(column < 3) {
+          const coords = [row, column, row, column+1];
+          row = column+1;
+          board = swapValues(board, coords);
+          shuffleMoves.push({ board, coords });
+          count++;
+        }
+        break;
+      
+      case 2:       // move down
+        if(row < 3) {
+          const coords = [row, column, row+1, column];
+          row = row+1;
+          board = swapValues(board, coords);
+          shuffleMoves.push({ board, coords });
+          count++;
+        }
+        break;
+
+      case 3:       // move left
+        if(column > 0) {
+          const coords = [row, column, row, column-1];
+          row = column-1;
+          board = swapValues(board, coords);
+          shuffleMoves.push({ board, coords });
+          count++;
+        }
+        break;
+      
+      default:
+        break;
+    }
+  }
+  return shuffleMoves;
+}
+
+export { swapValues, checkWin, findCoordsOfEmptyTile, makeShuffleMoves };

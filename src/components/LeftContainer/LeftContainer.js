@@ -28,9 +28,9 @@ const LeftContainer = ({moves, ResetGame, ResetTimer}) => {
         <Button
           bgColor={"#F79331"}
           color={"white"}
-          onClick={() => {
-            ResetGame();
-            ResetTimer();
+          onClick={async () => {
+            await ResetGame();
+            await ResetTimer();
             window.location.reload();
           }}
         >

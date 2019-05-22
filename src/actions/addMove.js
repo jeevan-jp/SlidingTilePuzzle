@@ -3,3 +3,8 @@ export const addMove = (coords, board)=> ({
   coords,
   board,
 });
+
+export const addShuffleMoves = (moves) => ({
+  type: 'ADD_SHUFFLE_MOVE',
+  moves,
+});
