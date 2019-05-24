@@ -146,6 +146,7 @@ class ButtonBoard extends React.Component {
         board,
       }, () => {
         counter--;
+        this.props.addMove(coords, board);
         if(counter < 0) {
           clearInterval(x);
         }
